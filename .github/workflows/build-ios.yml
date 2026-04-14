@@ -16,19 +16,17 @@ jobs:
       - name: Configure and Build
         run: |
           mkdir build && cd build
-          cmake .. \
+          cmake ../desktop \
             -DCMAKE_SYSTEM_NAME=iOS \
             -DCMAKE_OSX_SYSROOT=iphoneos \
             -DCMAKE_OSX_ARCHITECTURES=arm64 \
-            -DSDL2_INCLUDE_DIR=$(brew --prefix sdl2)/include/SDL2 \
-            -G "Xcode"
-          xcodebuild -project sonic3air.xcodeproj -scheme sonic3air -sdk iphoneos -configuration Release archive -archivePath $PWD/sonic3air.xcarchive
-          xcodebuild -exportArchive -archivePath $PWD/sonic3air.xcarchive -exportOptionsPlist exportOptions.plist -exportPath $PWD/build
-
+            -G "Unix Makefiles"
+          make sonic3air
+      
       - name: Package IPA
         run: |
           mkdir -p Payload/Sonic3AIR.app
-          cp -r build/*.app/* Payload/Sonic3AIR.app/
+          find build -name "sonic3air" -exec cp {} Payload/Sonic3AIR.app/ \;
           zip -r sonic3air_native.ipa Payload/
 
       - name: Upload Artifact
