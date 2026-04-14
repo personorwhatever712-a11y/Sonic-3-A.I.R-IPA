@@ -8,7 +8,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          submodules: recursive
+          submodules: 'recursive'
+          fetch-depth: 0
 
       - name: Install Dependencies
         run: brew install cmake sdl2 libogg libvorbis
@@ -16,7 +17,7 @@ jobs:
       - name: Configure and Build
         run: |
           mkdir build && cd build
-          cmake ../desktop \
+          cmake ../ \
             -DCMAKE_SYSTEM_NAME=iOS \
             -DCMAKE_OSX_SYSROOT=iphoneos \
             -DCMAKE_OSX_ARCHITECTURES=arm64 \
